@@ -22,7 +22,7 @@ export default function Home() {
           {/* Bottle */}
           <div className="relative flex w-full max-w-sm items-center justify-center md:max-w-md">
             <Image
-              src="/images/JananOud_1_5be0e8a1-1c3c-462e-9266-04a3ead26d3e.jpg"
+              src="/images/Gemini_Generated_Image_pya2wfpya2wfpya2.jpeg"
               alt="JANAN OUD perfume bottle by J."
               width={600}
               height={900}
