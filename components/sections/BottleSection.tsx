@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function BottleSection() {
@@ -8,9 +9,9 @@ export default function BottleSection() {
       id="bottle"
       className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-6 py-24"
     >
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-16 md:grid-cols-2">
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 md:grid-cols-2 md:gap-20">
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
+          initial={{ opacity: 0, x: -35 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8 }}
@@ -32,15 +33,31 @@ export default function BottleSection() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.9 }}
           className="flex items-center justify-center"
         >
-          <div className="relative flex h-[420px] w-[260px] items-center justify-center rounded-[3rem] border border-white/10 bg-white/[0.02] shadow-2xl">
-            <div className="h-[250px] w-[105px] rounded-[1.5rem] border border-white/10 bg-white/[0.04]" />
-          </div>
+          <motion.div
+            animate={{ y: [0, -8, 0] }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="relative flex items-center justify-center"
+          >
+            <Image
+              src="/images/JananOud_1_5be0e8a1-1c3c-462e-9266-04a3ead26d3e.jpg"
+              alt="JANAN OUD perfume bottle by J."
+              width={500}
+              height={750}
+              quality={90}
+              className="h-auto max-h-[520px] w-auto max-w-[75vw] object-contain drop-shadow-2xl"
+              sizes="(max-width: 768px) 75vw, 35vw"
+            />
+          </motion.div>
         </motion.div>
       </div>
     </section>
