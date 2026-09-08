@@ -1,120 +1,83 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function FinalRevealSection() {
   return (
     <section
       id="final-reveal"
-      className="relative min-h-screen bg-black overflow-hidden flex items-center justify-center px-6 py-24"
+      className="relative min-h-[70vh] flex items-center justify-center px-6 py-24 bg-black overflow-hidden"
     >
-      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-black to-neutral-950" />
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(180,120,30,0.10),transparent_50%)]" />
-
-      {/* Subtle atmospheric glow */}
       <motion.div
         animate={{
-          opacity: [0.15, 0.3, 0.15],
+          opacity: [0.12, 0.22, 0.12],
           scale: [0.95, 1.05, 0.95],
         }}
         transition={{
-          duration: 7,
+          duration: 8,
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute w-[28rem] h-[28rem] rounded-full bg-amber-500/10 blur-[100px]"
+        className="absolute w-80 h-80 rounded-full bg-amber-500/10 blur-[100px]"
       />
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto text-center">
+      <div className="relative z-10 text-center max-w-3xl">
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.9 }}
-          className="text-amber-400/70 text-[10px] md:text-xs tracking-[0.4em] uppercase mb-8"
+          className="text-amber-400/60 text-[10px] tracking-[0.4em] uppercase mb-6"
         >
-          The Signature
+          JANAN OUD
         </motion.p>
 
-        {/* Bottle */}
-        <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.96 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 1.4,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          animate={{
-            y: [0, -8, 0],
-          }}
-          className="relative mx-auto w-[230px] md:w-[300px] lg:w-[340px]"
-        >
-          <Image
-            src="/images/Gemini_Generated_Image_isrej8isrej8isre.jpeg"
-            alt="JANAN OUD perfume bottle by J."
-            width={500}
-            height={750}
-            className="relative z-10 w-full h-auto object-contain drop-shadow-2xl"
-            quality={95}
-          />
-        </motion.div>
-
-        {/* Text */}
-        <motion.div
+        <motion.h2
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.25 }}
-          className="mt-8 md:mt-10"
+          transition={{ delay: 0.1 }}
+          className="font-serif text-4xl md:text-6xl lg:text-7xl text-white"
         >
-          <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl text-white tracking-tight">
-            A scent that leaves a mark.
-          </h2>
+          A scent that leaves a mark.
+        </motion.h2>
 
-          <p className="mt-5 text-sm md:text-base text-amber-100/50 font-light tracking-wide max-w-md mx-auto">
-            JANAN OUD — a fragrance of depth, warmth and character.
-          </p>
-        </motion.div>
-
-        {/* CTA */}
-        <motion.a
-          href="#discover"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, delay: 0.45 }}
-          whileHover={{
-            backgroundColor: "rgba(245,158,11,0.08)",
-          }}
-          className="inline-block mt-10 px-9 py-3.5 border border-amber-400/40 text-amber-400 text-[10px] md:text-xs tracking-[0.2em] uppercase transition-colors duration-500"
-        >
-          Discover JANAN OUD
-        </motion.a>
-
-        {/* Signature */}
-        <motion.div
+        <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.7 }}
-          className="mt-20 md:mt-24"
+          transition={{ delay: 0.25 }}
+          className="mt-5 text-sm text-amber-100/45 font-light"
         >
-          <div className="w-12 h-px bg-amber-400/30 mx-auto mb-6" />
+          Depth. Warmth. Character.
+        </motion.p>
 
-          <p className="font-serif text-2xl md:text-3xl text-amber-400/80 tracking-[0.12em]">
+        <motion.a
+          href="#fragrance"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4 }}
+          className="inline-block mt-9 px-9 py-3.5 border border-amber-400/40 text-amber-400 text-[10px] tracking-[0.2em] uppercase hover:bg-amber-400/10 transition-all duration-500"
+        >
+          Explore Again
+        </motion.a>
+
+        <div className="mt-20">
+          <div className="w-10 h-px bg-amber-400/30 mx-auto mb-5" />
+
+          <p className="font-serif text-2xl text-amber-400/70">
             J.
           </p>
 
-          <p className="mt-2 text-[9px] text-white/30 tracking-[0.35em] uppercase">
+          <p className="mt-2 text-[8px] text-white/25 tracking-[0.35em] uppercase">
             JANAN OUD
           </p>
-        </motion.div>
+        </div>
+
       </div>
     </section>
   );
-        }
+}
