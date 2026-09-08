@@ -3,188 +3,169 @@
 import {
   motion,
   useScroll,
-  useSpring,
   useTransform,
-  type MotionValue,
+  MotionValue,
 } from "framer-motion";
 import { useRef } from "react";
 
-const fragranceNotes = {
-  top: ["Raspberry", "Saffron", "Clove Ozone Accord"],
-  heart: [
-    "Lily of the Valley",
-    "Rose",
-    "Jasmine",
-    "Geranium",
-    "Tuberose",
-    "Tea",
-  ],
-  base: [
-    "Musk",
-    "Amber",
-    "Agarwood",
-    "Amyris",
-    "Sandalwood",
-    "Vanilla",
-    "Moss",
-    "Leather",
-    "Nagarmotha",
-    "Patchouli",
-  ],
+type OpacityRange = [number[], number[]];
+
+type FragranceStageProps = {
+  stage: "top" | "heart" | "base";
+  title: string;
+  notes: string[];
+  scrollProgress: MotionValue<number>;
+  opacityRange: OpacityRange;
+  bgRange: OpacityRange;
 };
 
-const stageLabels = ["TOP", "HEART", "BASE"] as const;
-
-const particles = Array.from({ length: 24 }, (_, index) => ({
-  id: index,
-  left: `${(index * 17) % 100}%`,
-  height: `${90 + (index % 8) * 25}px`,
-  duration: 14 + (index % 8),
-  delay: index * 0.45,
-}));
-
-function ProgressStage({
-  label,
-  index,
-  scrollProgress,
-}: {
-  label: string;
-  index: number;
-  scrollProgress: MotionValue<number>;
-}) {
-  const start = index / 3;
-  const end = (index + 1) / 3;
-
-  const opacity = useTransform(
-    scrollProgress,
-    [start - 0.08, start, end, end + 0.08],
-    [0.3, 1, 1, 0.3]
-  );
-
-  return (
-    <motion.div style={{ opacity }} className="flex flex-col items-center">
-      <span className="text-[10px] tracking-[0.3em] text-amber-300/70">
-        {label}
-      </span>
-      <div className="mt-3 h-8 w-px bg-amber-300/20" />
-    </motion.div>
-  );
-}
-
-function FragranceNote({
-  note,
-  index,
-  stageStart,
-  scrollProgress,
-}: {
-  note: string;
-  index: number;
-  stageStart: number;
-  scrollProgress: MotionValue<number>;
-}) {
-  const noteStart = stageStart + index * 0.025;
-  const noteEnd = noteStart + 0.08;
-
-  const opacity = useTransform(
-    scrollProgress,
-    [noteStart, noteEnd],
-    [0, 1]
-  );
-
-  const y = useTransform(
-    scrollProgress,
-    [noteStart, noteEnd],
-    [18, 0]
-  );
-
-  return (
-    <motion.div
-      style={{ opacity, y }}
-      className="flex items-center justify-center gap-3"
-    >
-      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300/70 shadow-[0_0_12px_rgba(251,191,36,0.35)]" />
-      <span className="text-center text-sm font-light tracking-wide text-amber-50/80 md:text-lg">
-        {note}
-      </span>
-    </motion.div>
-  );
-}
+const particles = [
+  { left: "8%", delay: 0, duration: 7, size: 2 },
+  { left: "18%", delay: 1.5, duration: 8, size: 3 },
+  { left: "31%", delay: 0.8, duration: 6, size: 2 },
+  { left: "46%", delay: 2, duration: 9, size: 2 },
+  { left: "61%", delay: 1, duration: 7, size: 3 },
+  { left: "74%", delay: 2.5, duration: 8, size: 2 },
+  { left: "88%", delay: 0.5, duration: 6.5, size: 2 },
+];
 
 function FragranceStage({
+  stage,
   title,
-  subtitle,
   notes,
-  index,
   scrollProgress,
-}: {
-  title: string;
-  subtitle: string;
-  notes: string[];
-  index: number;
-  scrollProgress: MotionValue<number>;
-}) {
-  const start = index / 3;
-  const middle = start + 1 / 6;
-  const end = (index + 1) / 3;
-
+  opacityRange,
+  bgRange,
+}: FragranceStageProps) {
   const opacity = useTransform(
     scrollProgress,
-    [start - 0.08, start, middle, end, end + 0.08],
-    [0, 1, 1, 1, 0]
+    opacityRange[0],
+    opacityRange[1]
   );
 
-  const scale = useTransform(
+  const bgNumberOpacity = useTransform(
     scrollProgress,
-    [start - 0.08, start, middle, end, end + 0.08],
-    [0.94, 1, 1, 1, 0.94]
+    bgRange[0],
+    bgRange[1]
   );
 
-  const y = useTransform(
+  const number =
+    stage === "top" ? "01" : stage === "heart" ? "02" : "03";
+
+  return (
+    <motion.div
+      style={{ opacity }}
+      className="absolute inset-0 flex items-center justify-center px-6 md:px-10"
+    >
+      <motion.div
+        style={{ opacity: bgNumberOpacity }}
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+      >
+        <span className="font-serif text-[15rem] md:text-[25rem] lg:text-[32rem] leading-none text-amber-400/[0.04] select-none">
+          {number}
+        </span>
+      </motion.div>
+
+      <div className="relative z-10 w-full max-w-6xl mx-auto">
+        <div className="mb-8 md:mb-12">
+          <p className="text-amber-400/70 text-[10px] md:text-xs tracking-[0.35em] uppercase mb-4">
+            {number} / {stage}
+          </p>
+
+          <h3 className="font-serif text-4xl md:text-6xl lg:text-7xl text-white tracking-tight">
+            {title}
+          </h3>
+        </div>
+
+        <div className="w-12 md:w-16 h-px bg-amber-400/40 mb-8 md:mb-12" />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-5 md:gap-y-7 max-w-3xl">
+          {notes.map((note) => (
+            <div
+              key={note}
+              className="flex items-center border-b border-white/10 pb-4"
+            >
+              <span className="w-1 h-1 rounded-full bg-amber-400/70 mr-4 shrink-0" />
+
+              <span className="text-sm md:text-base lg:text-lg text-amber-50/80 font-light tracking-wide">
+                {note}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function AmbientParticles() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {particles.map((particle, index) => (
+        <motion.div
+          key={index}
+          className="absolute rounded-full bg-amber-200/30"
+          style={{
+            left: particle.left,
+            bottom: "-10px",
+            width: particle.size,
+            height: particle.size,
+          }}
+          animate={{
+            y: [0, -150],
+            opacity: [0, 0.45, 0],
+          }}
+          transition={{
+            duration: particle.duration,
+            delay: particle.delay,
+            repeat: Infinity,
+            ease: "easeOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ProgressIndicator({
+  scrollProgress,
+}: {
+  scrollProgress: MotionValue<number>;
+}) {
+  const progressWidth = useTransform(
     scrollProgress,
-    [start - 0.08, start, middle, end, end + 0.08],
-    [35, 0, 0, 0, -35]
+    [0, 1],
+    ["0%", "100%"]
   );
 
-  const numberOpacity = useTransform(
+  const progressOpacity = useTransform(
     scrollProgress,
-    [start, middle, end],
-    [0, 0.12, 0]
+    [0, 0.03, 0.97, 1],
+    [0, 1, 1, 0]
   );
 
   return (
     <motion.div
-      style={{ opacity, scale, y }}
-      className="absolute inset-0 flex flex-col items-center justify-center px-6 pb-8 pt-28 md:px-12 md:pb-12 md:pt-32"
+      style={{ opacity: progressOpacity }}
+      className="absolute bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 z-30 w-32 md:w-48"
     >
-      <motion.div
-        style={{ opacity: numberOpacity }}
-        className="pointer-events-none absolute select-none font-serif text-[180px] leading-none text-amber-300 md:text-[360px]"
-      >
-        0{index + 1}
-      </motion.div>
+      <div className="relative h-px bg-white/10 overflow-hidden">
+        <motion.div
+          style={{ width: progressWidth }}
+          className="absolute left-0 top-0 h-px bg-amber-400/70"
+        />
+      </div>
 
-      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center">
-        <p className="mb-4 text-[10px] tracking-[0.35em] text-amber-300/60 md:text-xs">
-          {subtitle}
-        </p>
-
-        <h3 className="text-center font-serif text-4xl leading-none tracking-tight text-white md:text-7xl lg:text-8xl">
-          {title}
-        </h3>
-
-        <div className="mb-10 mt-6 h-px w-16 bg-amber-300/40 md:mb-14 md:mt-8" />
-
-        <div className="grid w-full max-w-3xl grid-cols-1 gap-x-10 gap-y-5 sm:grid-cols-2 md:grid-cols-3 md:gap-y-7">
-          {notes.map((note, noteIndex) => (
-            <FragranceNote
-              key={note}
-              note={note}
-              index={noteIndex}
-              stageStart={start}
-              scrollProgress={scrollProgress}
-            />
-          ))}
-        </div>
+      <div className="flex justify-between mt-3">
+        <span className="text-[8px] text-white/30 tracking-[0.2em] uppercase">
+          Top
+        </span>
+        <span className="text-[8px] text-white/30 tracking-[0.2em] uppercase">
+          Heart
+        </span>
+        <span className="text-[8px] text-white/30 tracking-[0.2em] uppercase">
+          Base
+        </span>
       </div>
     </motion.div>
   );
@@ -198,146 +179,131 @@ export default function ScentSection() {
     offset: ["start start", "end end"],
   });
 
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 28,
-    restDelta: 0.001,
-  });
-
-  const backgroundOne = useTransform(
-    smoothProgress,
-    [0, 0.33],
+  const headerOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.12],
     [1, 0]
   );
 
-  const backgroundTwo = useTransform(
-    smoothProgress,
-    [0.33, 0.5, 0.66],
-    [0, 1, 0]
+  const headerY = useTransform(
+    scrollYProgress,
+    [0, 0.12],
+    [0, -30]
   );
 
-  const backgroundThree = useTransform(
-    smoothProgress,
-    [0.66, 1],
-    [0, 1]
-  );
+  const topNotes = [
+    "Raspberry",
+    "Saffron",
+    "Clove Ozone Accord",
+  ];
 
-  const headerOpacity = useTransform(
-    smoothProgress,
-    [0, 0.08, 0.9, 1],
-    [1, 0.25, 0.25, 1]
-  );
+  const heartNotes = [
+    "Lily of the Valley",
+    "Rose",
+    "Jasmine",
+    "Geranium",
+    "Tuberose",
+    "Tea",
+  ];
 
-  const progressHeight = useTransform(
-    smoothProgress,
-    [0, 1],
-    ["0%", "100%"]
-  );
+  const baseNotes = [
+    "Musk",
+    "Amber",
+    "Agarwood",
+    "Amyris",
+    "Sandalwood",
+    "Vanilla",
+    "Moss",
+    "Leather",
+    "Nagarmotha",
+    "Patchouli",
+  ];
 
   return (
     <section
-      id="scent"
+      id="fragrance"
       ref={sectionRef}
-      className="relative min-h-[300vh] overflow-hidden bg-black md:min-h-[400vh]"
+      className="relative min-h-[300vh] md:min-h-[400vh] bg-black"
     >
-      <div className="sticky top-0 h-screen overflow-hidden">
-        <motion.div
-          style={{ opacity: backgroundOne }}
-          className="absolute inset-0 bg-gradient-to-b from-black via-neutral-950 to-neutral-800"
-        />
+      <div className="sticky top-0 h-screen overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-950">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-950/10 via-transparent to-black" />
+
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(180,120,30,0.06),transparent_55%)]" />
+
+        <AmbientParticles />
 
         <motion.div
-          style={{ opacity: backgroundTwo }}
-          className="absolute inset-0 bg-gradient-to-b from-black via-amber-950/25 to-neutral-950"
-        />
-
-        <motion.div
-          style={{ opacity: backgroundThree }}
-          className="absolute inset-0 bg-gradient-to-b from-black via-neutral-900 to-amber-950/20"
-        />
-
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {particles.map((particle) => (
-            <motion.div
-              key={particle.id}
-              className="absolute bottom-[-120px] w-px bg-gradient-to-t from-transparent via-amber-300/20 to-transparent"
-              style={{
-                left: particle.left,
-                height: particle.height,
-              }}
-              animate={{
-                y: [0, -window.innerHeight * 1.2],
-                opacity: [0, 0.35, 0],
-              }}
-              transition={{
-                duration: particle.duration,
-                delay: particle.delay,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-          ))}
-        </div>
-
-        <motion.header
-          style={{ opacity: headerOpacity }}
-          className="absolute left-0 right-0 top-0 z-30 px-6 pb-4 pt-8 text-center md:pb-6 md:pt-12"
+          style={{ opacity: headerOpacity, y: headerY }}
+          className="absolute top-10 md:top-16 left-0 right-0 z-20 px-6 md:px-10 text-center"
         >
-          <h2 className="font-serif text-3xl tracking-tight text-white md:text-5xl">
+          <p className="text-amber-400/70 text-[10px] md:text-xs tracking-[0.4em] uppercase mb-4">
+            The Olfactory Journey
+          </p>
+
+          <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl text-white tracking-tight">
             THE FRAGRANCE
           </h2>
 
-          <p className="mt-3 text-[10px] uppercase tracking-[0.3em] text-amber-300/60 md:text-xs">
-            Citrus / Spicy
+          <p className="mt-4 text-xs md:text-sm text-amber-100/50 tracking-[0.25em] uppercase">
+            Citrus • Spicy • Woody • Musky
           </p>
-        </motion.header>
+        </motion.div>
 
-        <div className="absolute right-5 top-1/2 z-30 -translate-y-1/2 md:right-8">
-          <div className="hidden flex-col items-center gap-8 md:flex">
-            {stageLabels.map((label, index) => (
-              <ProgressStage
-                key={label}
-                label={label}
-                index={index}
-                scrollProgress={smoothProgress}
-              />
-            ))}
-          </div>
+        <div className="absolute inset-0">
+          <FragranceStage
+            stage="top"
+            title="TOP NOTES"
+            notes={topNotes}
+            scrollProgress={scrollYProgress}
+            opacityRange={[
+              [0, 0.28, 0.38, 1],
+              [1, 1, 0, 0],
+            ]}
+            bgRange={[
+              [0, 0.28],
+              [0.15, 0],
+            ]}
+          />
 
-          <div className="relative h-48 w-px bg-amber-300/20 md:hidden">
-            <motion.div
-              style={{ height: progressHeight }}
-              className="absolute left-0 top-0 w-px bg-amber-300/70"
-            />
-          </div>
+          <FragranceStage
+            stage="heart"
+            title="HEART NOTES"
+            notes={heartNotes}
+            scrollProgress={scrollYProgress}
+            opacityRange={[
+              [0, 0.28, 0.38, 0.62, 0.72, 1],
+              [0, 0, 1, 1, 0, 0],
+            ]}
+            bgRange={[
+              [0.28, 0.5],
+              [0, 0.15],
+            ]}
+          />
+
+          <FragranceStage
+            stage="base"
+            title="BASE NOTES"
+            notes={baseNotes}
+            scrollProgress={scrollYProgress}
+            opacityRange={[
+              [0, 0.62, 0.72, 1],
+              [0, 0, 1, 1],
+            ]}
+            bgRange={[
+              [0.62, 0.8],
+              [0, 0.15],
+            ]}
+          />
         </div>
 
-        <div className="relative h-full w-full">
-          <FragranceStage
-            title="TOP NOTES"
-            subtitle="The first impression"
-            notes={fragranceNotes.top}
-            index={0}
-            scrollProgress={smoothProgress}
-          />
+        <ProgressIndicator scrollProgress={scrollYProgress} />
 
-          <FragranceStage
-            title="HEART NOTES"
-            subtitle="The essence revealed"
-            notes={fragranceNotes.heart}
-            index={1}
-            scrollProgress={smoothProgress}
-          />
-
-          <FragranceStage
-            title="BASE NOTES"
-            subtitle="The lasting memory"
-            notes={fragranceNotes.base}
-            index={2}
-            scrollProgress={smoothProgress}
-          />
+        <div className="absolute bottom-8 md:bottom-10 right-6 md:right-10 z-20 hidden md:block">
+          <span className="text-[9px] text-white/25 tracking-[0.3em] uppercase">
+            JANAN OUD
+          </span>
         </div>
       </div>
     </section>
   );
-}
+          }
