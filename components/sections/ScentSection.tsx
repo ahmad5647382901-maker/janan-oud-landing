@@ -86,4 +86,4 @@ export default function ScentSection() {
       </div>
     </section>
   );
-        
+}      
