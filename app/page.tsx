@@ -1,10 +1,9 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Navigation from "@/components/ui/Navigation";
-import LoadingScreen from "@/components/ui/LoadingScreen";
 
 const ScentSection = lazy(
   () => import("@/components/sections/ScentSection")
@@ -15,42 +14,32 @@ const FinalRevealSection = lazy(
 );
 
 export default function Home() {
-  const [isLoaded, setIsLoaded] = useState(false);
-
   const { scrollYProgress } = useScroll();
 
   const heroOpacity = useTransform(
     scrollYProgress,
-    [0, 0.25],
+    [0, 0.2],
     [1, 0]
   );
 
   const heroY = useTransform(
     scrollYProgress,
-    [0, 0.25],
-    [0, -50]
+    [0, 0.2],
+    [0, -40]
   );
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!isLoaded) {
-    return <LoadingScreen />;
-  }
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-black">
       <Navigation />
 
       {/* HERO */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 py-20">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 py-20 bg-black">
+
         <div className="absolute inset-0 bg-gradient-to-b from-black via-neutral-900 to-neutral-950" />
 
         <div className="absolute inset-0 bg-gradient-to-br from-amber-900/10 via-transparent to-transparent" />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
 
         <motion.div
           style={{
@@ -59,14 +48,14 @@ export default function Home() {
           }}
           className="relative z-10 w-full max-w-7xl mx-auto"
         >
-          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
 
-            {/* HERO TEXT */}
+            {/* TEXT */}
             <motion.div
-              initial={{ opacity: 0, x: -40 }}
+              initial={{ opacity: 0, x: -35 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{
-                duration: 1.2,
+                duration: 1,
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="text-left"
@@ -97,18 +86,19 @@ export default function Home() {
               </a>
             </motion.div>
 
-            {/* HERO BOTTLE — ONLY MAIN LARGE BOTTLE */}
+            {/* HERO BOTTLE */}
             <motion.div
-              initial={{ opacity: 0, x: 40 }}
+              initial={{ opacity: 0, x: 35 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{
-                duration: 1.3,
-                delay: 0.2,
+                duration: 1.1,
+                delay: 0.15,
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="flex justify-center"
             >
-              <div className="relative w-[75vw] max-w-sm md:max-w-md">
+              <div className="relative w-[72vw] max-w-sm md:max-w-md">
+
                 <div className="absolute inset-0 bg-amber-900/10 blur-3xl" />
 
                 <Image
@@ -119,14 +109,17 @@ export default function Home() {
                   priority
                   quality={95}
                   className="relative z-10 w-full h-auto object-contain drop-shadow-2xl"
-                  sizes="(max-width: 768px) 75vw, 35vw"
+                  sizes="(max-width: 768px) 72vw, 35vw"
                 />
+
               </div>
             </motion.div>
+
           </div>
         </motion.div>
 
-        <div className="absolute bottom-7 left-1/2 -translate-x-1/2">
+        {/* SCROLL */}
+        <div className="absolute bottom-7 left-1/2 -translate-x-1/2 z-20">
           <div className="flex flex-col items-center gap-3">
             <div className="w-px h-9 bg-gradient-to-b from-amber-400/60 to-transparent" />
 
@@ -135,20 +128,23 @@ export default function Home() {
             </span>
           </div>
         </div>
+
       </section>
 
       {/* SHORT PRODUCT STORY */}
-      <section className="relative min-h-[70vh] flex items-center px-6 py-24 bg-black overflow-hidden">
+      <section className="relative min-h-[65vh] flex items-center px-6 py-20 bg-black overflow-hidden">
+
         <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-black to-neutral-950" />
 
         <div className="relative z-10 w-full max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+
+          <div className="grid md:grid-cols-2 gap-10 md:gap-20 items-center">
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.9 }}
+              transition={{ duration: 0.8 }}
             >
               <p className="text-amber-400/70 text-[10px] tracking-[0.35em] uppercase mb-5">
                 The Character
@@ -160,44 +156,52 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.15 }}
-              className="text-sm md:text-base text-amber-100/60 font-light leading-8"
+              transition={{
+                duration: 0.8,
+                delay: 0.1,
+              }}
+              className="text-sm md:text-base text-amber-100/60 font-light leading-7"
             >
               <p>
                 JANAN OUD brings together bright citrus freshness,
                 warm spices and a deep woody-musky character.
               </p>
 
-              <div className="mt-8 space-y-3">
+              <div className="mt-7 space-y-3">
+
                 <div className="flex justify-between border-b border-white/10 pb-3">
-                  <span className="text-amber-400/60 text-xs uppercase tracking-wider">
+                  <span className="text-amber-400/60 text-[10px] uppercase tracking-wider">
                     Type
                   </span>
+
                   <span className="text-white/70">
                     Eau de Parfum
                   </span>
                 </div>
 
                 <div className="flex justify-between border-b border-white/10 pb-3">
-                  <span className="text-amber-400/60 text-xs uppercase tracking-wider">
+                  <span className="text-amber-400/60 text-[10px] uppercase tracking-wider">
                     Sizes
                   </span>
+
                   <span className="text-white/70">
                     30 ML / 100 ML
                   </span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-amber-400/60 text-xs uppercase tracking-wider">
+                  <span className="text-amber-400/60 text-[10px] uppercase tracking-wider">
                     Character
                   </span>
+
                   <span className="text-white/70">
                     Citrus / Spicy / Woody
                   </span>
                 </div>
+
               </div>
             </motion.div>
 
@@ -205,10 +209,11 @@ export default function Home() {
         </div>
       </section>
 
-      <Suspense fallback={<LoadingScreen />}>
+      <Suspense fallback={null}>
         <ScentSection />
         <FinalRevealSection />
       </Suspense>
+
     </main>
   );
-            }
+}
